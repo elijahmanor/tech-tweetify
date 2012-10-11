@@ -1,0 +1,27 @@
+{
+  "name": "Tech Tweetify",
+  "version": "1.0",
+  "description": "Transform this page into a Tech Tweet format",
+  "icons": {"128": "techTweet48.png"},
+  "background_page": "background.html",
+  "browser_action": {
+    "default_icon": "techTweet19.png",
+    "default_title": "Tech Tweetify",
+    "popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["jquery.min.js", "contentScript.js"]
+    }
+  ],  
+  "permissions": [
+    "http://twitter.com/*",
+	  "http://api.bit.ly/*",
+    "http://www.google.com/*",
+    "http://www.googleapis.com/*",
+    // "https://www.googleapis.com/*",
+    "tabs"
+  ],
+  "options_page": "options.html"
+}

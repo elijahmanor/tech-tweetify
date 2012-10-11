@@ -1,0 +1,143 @@
+<script>
+
+var OPTIONS = {
+	prefs : {
+		namespace : "extensions.twitter.",
+		
+		getPref : function (prefName) {
+			var key = this.namespace + prefName;
+			
+			if (key in localStorage) {
+				return localStorage[this.namespace + prefName];
+			}
+			else {
+				return null;
+			}
+		},
+		
+		getBoolPref : function (prefName) {
+			var rv = this.getPref(prefName);
+			
+			if (!rv || rv == "false" || rv == "null") {
+				return false;
+			}
+			
+			return true;
+		},
+		
+		getCharPref : function (prefName) {
+			var rv = this.getPref(prefName) + "";
+			
+			if (rv == "null") {
+				rv = "";
+			}
+			
+			return rv;
+		},
+		
+		setPref : function (prefName, prefVal) {
+			localStorage[this.namespace + prefName] = prefVal;
+		},
+		
+		setCharPref : function (prefName, prefVal) {
+			this.setPref(prefName, prefVal);
+		},
+		
+		setBoolPref : function (prefName, prefVal) {
+			this.setPref(prefName, !!prefVal);
+		}
+	},
+		
+	strings : {
+		properties : {
+			"twitterbar.alertTitle": "A Message From TwitterBar",
+			"twitterbar.posting": "Posting to Twitter...",
+			"twitterbar.success": "Post Successful!",
+			"twitterbar.noAuth": "You have not authorized TwitterBar to access your account.",
+			"twitterbar.oauthExpired": "Your Twitter OAuth token has expired. You will now be asked to reauthorize TwitterBar.",
+			"twitterbar.newAuthString": "You authorized TwitterBar to access your account on %S.",
+			"twitterbar.oauthRequest1": "In order to use TwitterBar, you have to give it authorization to access your Twitter account.",
+			"twitterbar.oauthRequest2": "Do you want to do that now? It will only take a second, I promise.",
+			"twitterbar.oauthError1": "TwitterBar encountered an error while authenticating with Twitter:",
+			"twitterbar.oauthError2": "An error occurred while authorizing TwitterBar to access your account.",
+			"twitterbar.oauthRetry": "Do you want to try again?",
+			"twitterbar.posting": "Posting to Twitter...",
+			"twitterbar.confirmPrefString": "Always confirm before posting a URL to Twitter.",
+			"twitterbar.failWhale": "TwitterBar can't contact Twitter because Twitter is down.",
+			"twitterbar.twitterError": "Twitter responded with an error (%S):\n\n%S",
+			"twitterbar.otherError": "TwitterBar encountered an error (%S):\n\n%S",
+			"twitter.search.name": "OneRiot Social Web Search",
+			"twitter.search.description": "OneRiot is a real-time search engine that indexes the social web: the news, blogs and videos that people are sharing and looking at right now. Type a term into the search box, and OneRiot will return the hottest pages online right now.",
+			"twitterbar.trends.title": "More Trending Topics",
+			"twitterbar.trends.byline": "Brought to you by TwitterBar",
+			"twitterbar.trends.explanation": "These extra trends are provided by TwitterBar and OneRiot. To disable, visit TwitterBar's preferences."
+		},
+		
+		getString : function (key) {
+			return this.properties[key];
+		},
+		
+		getFormattedString : function (key, args) {
+			var val = this.properties[key];
+			
+			for (var i = 0; i < args.length; i++) {
+				val = val.replace("%S", args[i]);
+			}
+			
+			return val;
+		}
+	},
+		
+	init : function () {
+	    var authDate = this.prefs.getCharPref("oauth_timestamp");
+	    var label = "";
+	
+	    if (authDate) {
+	        var niceDate = new Date();
+	        niceDate.setTime(authDate);
+	        
+	        label = this.strings.getFormattedString("twitterbar.newAuthString", [ niceDate.toLocaleString() ]);
+        }
+        else {
+            label = this.strings.getString("twitterbar.noAuth");
+        }
+
+		document.getElementById("auth-summary").innerHTML = label;
+		document.getElementById("pref-open-after").checked = this.prefs.getBoolPref("tab");
+		document.getElementById("pref-show-trends").checked = this.prefs.getBoolPref("showTrends");
+		document.getElementById("pref-shortener").value = this.prefs.getCharPref("shortener");
+		document.getElementById("pref-prefix").value = this.prefs.getCharPref("web");
+    },
+
+	accept : function () {
+	    this.prefs.setCharPref("web", document.getElementById("pref-prefix").value);
+	    this.prefs.setBoolPref("tab", document.getElementById("pref-open-after").checked);
+	    this.prefs.setBoolPref("showTrends", document.getElementById("pref-show-trends").checked);
+	    this.prefs.setCharPref("shortener", document.getElementById("pref-shortener").value);
+	}
+};
+</script>
+<body onload="OPTIONS.init();">
+	<fieldset>
+		<input type="checkbox" id="pref-open-after" /> 
+		Open Twitter in a new tab after I post
+	</fieldset>
+	<fieldset>
+		<input type="checkbox" id="pref-show-trends" /> 
+		Show additional trending topics in the Twitter sidebar.
+	</fieldset>
+	<fieldset>
+		What default text do you want to use when you open TwitterBar?
+	    <input type="text" id="pref-prefix" value="" /><br />
+		<small>(You can use $$ as a placeholder for the page's title and %% as a placeholder for the page's URL. )</small>
+	</fieldset>
+	<fieldset>
+	    URL Shortener:
+		<select id="pref-shortener">
+			<option value="is.gd">is.gd</option>
+			<option value="tinyurl">TinyURL</option>
+			<option value="">None (Let Twitter sort it out, probably with bit.ly)</option>
+		</select>
+	</fieldset>
+	<input type="submit" onclick="this.value = 'Saving...'; OPTIONS.accept(); setTimeout(function (x) { x.value = 'Save Options'; }, 1000, this);" value="Save Options" />
+</body>
