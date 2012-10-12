@@ -2,47 +2,12 @@
   <head>
     <link rel="stylesheet" href="popup.css" />
 	<script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript">
-		$(function() {
-			$('#techTweet').bind('keyup', function() {
-				$('#charactersLeft').text(140 - $(this).val().length);
-			});		
-			
-			chrome.tabs.getSelected(null, function (tab) { 								
-				chrome.tabs.sendRequest(tab.id, {action: "getUserName"}, function(response) {
-					var title = '"' + tab.title + '"';
-					var byAuthor = response.userName ? ' by @' + response.userName + ' ' : ' ';
-					//var hashTags = '#tech ' + (response.hashTag ? '#' + response.hashTag + ' ' : '#xxx ');
-					var hashTags = (response.hashTag ? '#' + response.hashTag + ' ' : '#xxx ');
-					$('#techTweet').val(title + byAuthor + hashTags); 
-					
-					var tabUrl = tab.url;
-					var utmIndex = tabUrl.indexOf('?utm_source=feedburner');
-					if (utmIndex > -1) {
-						tabUrl = tabUrl.substr(0, utmIndex);
-					}
-					getAndAppendShortUrl(tabUrl);						
-					
-					$('#techTweet').trigger('keyup');
-				});
-			});		
-			
-			function getAndAppendShortUrl(longUrl) {
-				chrome.extension.sendRequest({longUrl: longUrl}, function(response) {
-					var techTweet = $('#techTweet');
-					var oldValue = techTweet.val();
-					techTweet.val(oldValue + response.shortUrl);
-					techTweet[0].focus();
-					techTweet[0].select();
-					techTweet.trigger('keyup');
-				});				
-			}	
-		});
-    </script>
+    <script type="text/javascript" src="popup.js"></script>
   </head>
   <body>
 	<h2>Tech Tweetify</h2>
 	<textarea id="techTweet"></textarea>		
 	<div id="characterStatus"><span id="charactersLeft">140</span> <span>characters left</span></div>
+	<!-- <br/><textarea id="log"></textarea> -->
   </body>
 </html>

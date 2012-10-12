@@ -1,4 +1,4 @@
-
+console.log( "contentScript" );
 $(function() {
 	chrome.extension.onRequest.addListener(
 	  function(request, sender, sendResponse) {	
@@ -80,7 +80,7 @@ $(function() {
 			   } 
 			   return top; 
 			})(sortedHashFrequency);
-			console.log("Most Frequent Hash: " + mostFrequentHash);
+			// console.log("Most Frequent Hash: " + mostFrequentHash);
 			
 			sendResponse({userName: userName, hashTag: mostFrequentHash});	  
 		} else {
