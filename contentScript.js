@@ -7,54 +7,23 @@ $(function() {
 			//TODO - Change this to search for all userNames & pick most frequent
 			//TODO - Ignore twitter links @home
 			//TODO - Take into frequency account http://twitter.com/jglozano/statuses/12221001084 
-			var searchTerm = "", twitterUrl = "", userName = "";
+			var searchTerm = "", twitterUrl = "", userName = "", userHash = {}, userNames = [];
 			
-			if (!userName) {
-				searchTerm = "http://twitter.com/";
-				console.log('Searching ' + searchTerm + '...');
-				twitterUrl = $(document).find("a[href^='" + searchTerm + "']:eq(0)").attr('href');
-				console.log('twitterUrl: ' + twitterUrl);
-				if (twitterUrl && twitterUrl.length > 0) {
-					userName = twitterUrl.substr(searchTerm.length);
-					console.log('userName: ' + userName);
-				}
-			}
-			
-			if (!userName) {
-				searchTerm = "http://www.twitter.com/";
-				console.log('Searching ' + searchTerm + '...');
-				twitterUrl = $(document).find("a[href^='" + searchTerm + "']:eq(0)").attr('href');
-				console.log('twitterUrl: ' + twitterUrl);
-				if (twitterUrl && twitterUrl.length > 0) {
-					userName = twitterUrl.substr(searchTerm.length);
-					console.log('userName: ' + userName);
-				}
-			} 
+			$(document).find( "a[href^='http://twitter.com/'], a[href^='http://www.twitter.com/'], a[href^='http://twittercounter.com/']" ).each( function() {
+				var twitterUrl = $( this ).attr( "href" ),
+				lastIndexOf = twitterUrl.lastIndexOf( "/" );
 
-			if (!userName) {
-				searchTerm = "http://twittercounter.com/";
-				console.log('Searching ' + searchTerm + '...');
-				twitterUrl = $(document).find("a[href^='" + searchTerm + "']:eq(0)").attr('href');
-				console.log('twitterUrl: ' + twitterUrl);
-				if (twitterUrl && twitterUrl.length > 0) {
-					userName = twitterUrl.substr(searchTerm.length);
-					console.log('userName: ' + userName);
-				}
-			} 
-			
-			if (!userName) {
-				searchTerm = "http://twittercounter.com/embed/?username=";
-				console.log('Searching ' + searchTerm + '...');
-				twitterUrl = $(document).find("script[src^='" + searchTerm + "']:eq(0)").attr('src');
-				console.log('twitterUrl: ' + twitterUrl);
-				if (twitterUrl && twitterUrl.length > 0) {
-					userName = twitterUrl.substr(searchTerm.length);
-					if (userName.indexOf("&") > 0) {
-						userName = userName.substr(0, userName.indexOf("&"));
+				if ( twitterUrl && twitterUrl.length > 0 ) {
+					userName = twitterUrl.substr( lastIndexOf + 1 );
+					if ( userHash[ userName ] ) {
+						userHash[ userName ].count += 1;
+					} else {
+						userHash[ userName ] = { name: userName, count: 1 };
 					}
-					console.log('userName: ' + userName);
 				}
-			}
+			});
+			console.log( JSON.stringify( userHash ) );
+
 			console.log(twitterUrl);
 			console.log(userName);
 			
@@ -82,7 +51,11 @@ $(function() {
 			})(sortedHashFrequency);
 			// console.log("Most Frequent Hash: " + mostFrequentHash);
 			
-			sendResponse({userName: userName, hashTag: mostFrequentHash});	  
+			for ( var name in userHash ) {
+				userNames.push( userHash[ name ] );
+			}			
+			console.log( "userNames: " + JSON.stringify( userNames ) );
+			sendResponse({userNames: userNames, hashTag: mostFrequentHash});	  
 		} else {
 			sendResponse({}); 
 		}
