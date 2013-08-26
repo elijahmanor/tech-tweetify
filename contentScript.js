@@ -1,4 +1,3 @@
-console.log( "contentScript" );
 $(function() {
 	chrome.extension.onRequest.addListener(
 	  function(request, sender, sendResponse) {	
@@ -9,7 +8,7 @@ $(function() {
 			//TODO - Take into frequency account http://twitter.com/jglozano/statuses/12221001084 
 			var searchTerm = "", twitterUrl = "", userName = "", userHash = {}, userNames = [];
 			
-			$(document).find( "a[href^='http://twitter.com/'], a[href^='http://www.twitter.com/'], a[href^='http://twittercounter.com/']" ).each( function() {
+			$(document).find( "a[href*='://twitter.com/'], a[href*='://www.twitter.com/'], a[href*='://twittercounter.com/']" ).each( function() {
 				var twitterUrl = $( this ).attr( "href" ),
 				lastIndexOf = twitterUrl.lastIndexOf( "/" );
 
@@ -22,10 +21,6 @@ $(function() {
 					}
 				}
 			});
-			console.log( JSON.stringify( userHash ) );
-
-			console.log(twitterUrl);
-			console.log(userName);
 			
 			//TODO - Change this to read from the options page
 			var hashFrequency = [];
@@ -54,7 +49,6 @@ $(function() {
 			for ( var name in userHash ) {
 				userNames.push( userHash[ name ] );
 			}			
-			console.log( "userNames: " + JSON.stringify( userNames ) );
 			sendResponse({userNames: userNames, hashTag: mostFrequentHash});	  
 		} else {
 			sendResponse({}); 

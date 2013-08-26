@@ -13,7 +13,6 @@
 	}
 	
 	function getBitlyShortUrl(longUrl, callback) {
-		console.log('BEGIN getShortUrl');
 		var defaults = {
 			version:    '2.0.1',
 			login:      'elijahmanor',
@@ -31,11 +30,9 @@
 			+ "&history=" + defaults.history
 			+ "&format=json&callback=?";
 
-		console.log('daurl: ' + daurl);
 		$.getJSON(daurl, function(data){
 			console.log('BEGIN getJSON');
 			var shortUrl = data.results[longUrl].shortUrl;
-			console.log('shortUrl: ' + shortUrl);
 			callback(shortUrl);
 		});			
 	}	
