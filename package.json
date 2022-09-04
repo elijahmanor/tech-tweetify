@@ -1,0 +1,25 @@
+{
+  "name": "tech-tweetify",
+  "version": "1.0.0",
+  "description": "tech-tweetify =============",
+  "main": "background.js",
+  "scripts": {
+    "lint": "eslint --ext .jsx --ext .js --ext .json ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elijahmanor/tech-tweetify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elijahmanor/tech-tweetify/issues"
+  },
+  "homepage": "https://github.com/elijahmanor/tech-tweetify#readme",
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-plugin-crx-v3": "file:../eslint-plugin-crx-v3",
+    "jsonc-eslint-parser": "^2.1.0"
+  }
+}
