@@ -2,23 +2,23 @@
   "name": "Tech Tweetify",
   "version": "1.0",
   "description": "Transform this page into a Tech Tweet format",
-  "icons": {"128": "techTweet48.png"},
-  "background": { "scripts": [ "jquery.min.js", "background.js" ] },
+  "icons": { "128": "techTweet48.png" },
+  "background": { "scripts": ["jquery.min.js", "background.js"] },
   "browser_action": {
     "default_icon": "techTweet19.png",
     "default_title": "Tech Tweetify",
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' https://api-ssl.bitly.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://api-ssl.bitly.com/v4/shorten https://*.bitly.com; object-src 'self'",
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
       "js": ["jquery.min.js", "contentScript.js"]
     }
-  ],  
+  ],
   "permissions": [
     "http://twitter.com/*",
-	  "https://api-ssl.bitly.com/*",
+    "https://api-ssl.bitly.com/*",
     "tabs"
   ],
   "options_page": "options.html",

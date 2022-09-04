@@ -1,38 +1,31 @@
+const ACCESS_TOKEN = '0d3999b046be5caa1d8ab71121073b958b5d7c7b'
 
-    console.log( "background" );
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse)  { 
-		getShortUrl(request.longUrl, function(shortUrl) { 
-			sendResponse({shortUrl: shortUrl});	
-		});			
-    }); 
-	
-	function getShortUrl( longUrl, callback ) {
-		getBitlyShortUrl( longUrl, function( url ) {
-			callback( url );
-		});
-	}
-	
-	function getBitlyShortUrl(longUrl, callback) {
-		var defaults = {
-			version:    '2.0.1',
-			login:      'elijahmanor',
-			apiKey:     'R_d5a72285cd2e96eaf55d8753c6cad82e',
-			history:    '0',
-			longUrl:    ''
-		};
-		defaults.longUrl = longUrl;
+chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+  getShortUrl(request.longUrl, shortUrl => {
+    sendResponse({ shortUrl: shortUrl })
+  })
+})
 
-		var daurl = "https://api-ssl.bitly.com/shorten?" // "https://api.bit.ly/shorten?"
-			+ "version=" + defaults.version
-			+ "&longUrl=" + defaults.longUrl
-			+ "&login=" + defaults.login
-			+ "&apiKey=" + defaults.apiKey
-			+ "&history=" + defaults.history
-			+ "&format=json&callback=?";
+function getShortUrl(longUrl, callback) {
+  getBitlyShortUrl(longUrl, url => callback(url))
+}
 
-		$.getJSON(daurl, function(data){
-			console.log('BEGIN getJSON');
-			var shortUrl = data.results[longUrl].shortUrl;
-			callback(shortUrl);
-		});			
-	}	
+function getBitlyShortUrl(longUrl, callback) {
+  const params = {
+    long_url: longUrl,
+    domain: 'bit.ly'
+  }
+  $.ajax({
+    url: 'https://api-ssl.bitly.com/v4/shorten',
+    cache: false,
+    dataType: 'json',
+    method: 'POST',
+    contentType: 'application/json',
+    beforeSend: xhr => {
+      xhr.setRequestHeader('Authorization', `Bearer ${ ACCESS_TOKEN }`)
+    },
+    data: JSON.stringify(params)
+  })
+    .done(data => callback(data.link))
+    .fail(data => console.log('error', data))
+}
