@@ -22,7 +22,7 @@ function getBitlyShortUrl(longUrl, callback) {
     method: 'POST',
     contentType: 'application/json',
     beforeSend: xhr => {
-      xhr.setRequestHeader('Authorization', `Bearer ${ ACCESS_TOKEN }`)
+      xhr.setRequestHeader('Authorization', `Bearer ${ACCESS_TOKEN}`)
     },
     data: JSON.stringify(params)
   })
