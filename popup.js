@@ -56,8 +56,8 @@ $(() => {
   })
 
   function getAndAppendShortUrl(longUrl, callback) {
-    chrome.runtime.sendMessage({ action: 'getShortUrl', longUrl }, shortUrl => {
-      callback(shortUrl)
+    chrome.runtime.sendMessage({ longUrl }, response => {
+      callback(response.shortUrl)
     })
   }
 })

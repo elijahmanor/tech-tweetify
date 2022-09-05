@@ -1,11 +1,9 @@
 const ACCESS_TOKEN = '0d3999b046be5caa1d8ab71121073b958b5d7c7b'
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'getShortUrl') {
-    getShortUrl(request.longUrl).then(shortUrl => {
-      sendResponse(shortUrl)
-    })
-  }
+  getShortUrl(request.longUrl).then(shortUrl => {
+    sendResponse({ shortUrl })
+  })
   return true
 })
 
