@@ -1,31 +1,27 @@
 const ACCESS_TOKEN = '0d3999b046be5caa1d8ab71121073b958b5d7c7b'
 
-chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
-  getShortUrl(request.longUrl, shortUrl => {
-    sendResponse({ shortUrl: shortUrl })
-  })
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'getShortUrl') {
+    getShortUrl(request.longUrl).then(shortUrl => {
+      sendResponse(shortUrl)
+    })
+  }
+  return true
 })
 
-function getShortUrl(longUrl, callback) {
-  getBitlyShortUrl(longUrl, url => callback(url))
-}
-
-function getBitlyShortUrl(longUrl, callback) {
+async function getShortUrl(longUrl) {
   const params = {
     long_url: longUrl,
     domain: 'bit.ly'
   }
-  $.ajax({
-    url: 'https://api-ssl.bitly.com/v4/shorten',
-    cache: false,
-    dataType: 'json',
+  const response = await fetch('https://api-ssl.bitly.com/v4/shorten', {
     method: 'POST',
-    contentType: 'application/json',
-    beforeSend: xhr => {
-      xhr.setRequestHeader('Authorization', `Bearer ${ACCESS_TOKEN}`)
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${ACCESS_TOKEN}`
     },
-    data: JSON.stringify(params)
+    body: JSON.stringify(params)
   })
-    .done(data => callback(data.link))
-    .fail(data => console.log('error', data))
+  const data = await response.json()
+  return data.link
 }

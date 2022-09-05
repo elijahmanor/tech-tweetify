@@ -6,7 +6,8 @@ module.exports = {
   globals: {
     chrome: 'readonly',
     $: 'readonly',
-    module: 'readonly'
+    module: 'readonly',
+    importScripts: 'readonly'
   },
   parserOptions: {
     ecmaFeatures: {},
@@ -20,7 +21,8 @@ module.exports = {
     'crx-v3/manifest-version-3': 'error',
     'crx-v3/manifest-background': 'error',
     'crx-v3/manifest-permissions': 'error',
-    'crx-v3/storage-apis': 'error'
+    'crx-v3/storage-apis': 'error',
+    'crx-v3/deprecated-apis': 'error'
   },
   overrides: [
     {
