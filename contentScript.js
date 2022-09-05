@@ -1,5 +1,5 @@
 $(function () {
-  chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action == 'getUserName') {
       let userName = '',
         userHash = {},
