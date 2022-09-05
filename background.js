@@ -2,15 +2,11 @@ const ACCESS_TOKEN = '0d3999b046be5caa1d8ab71121073b958b5d7c7b'
 
 chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
   getShortUrl(request.longUrl, shortUrl => {
-    sendResponse({ shortUrl: shortUrl })
+    sendResponse({ shortUrl })
   })
 })
 
 function getShortUrl(longUrl, callback) {
-  getBitlyShortUrl(longUrl, url => callback(url))
-}
-
-function getBitlyShortUrl(longUrl, callback) {
   const params = {
     long_url: longUrl,
     domain: 'bit.ly'

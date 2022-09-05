@@ -5,7 +5,6 @@ $(() => {
 
   chrome.tabs.getSelected(null, tab => {
     chrome.tabs.sendRequest(tab.id, { action: 'getUserName' }, response => {
-      console.log('popup.js', { response })
       let title = tab.title
       const byAuthor = response.userNames.length
         ? ' by @' + response.userNames[0].name + ' '
@@ -52,7 +51,7 @@ $(() => {
   })
 
   function getAndAppendShortUrl(longUrl, callback) {
-    chrome.extension.sendRequest({ longUrl: longUrl }, response => {
+    chrome.extension.sendRequest({ longUrl }, response => {
       callback(response.shortUrl)
     })
   }
